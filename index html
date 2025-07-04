@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nutrition Chat</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <div class="chat-container">
+    <h1>🍏 Nutrition Chat</h1>
+    <textarea id="mealInput" placeholder="Type what you ate today..."></textarea>
+    <button onclick="handleMealInput()">Analyze Meal</button>
+    <div id="infographic"></div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
+

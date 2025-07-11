@@ -2,7 +2,7 @@ const fetch = require("node-fetch");
 
 exports.handler = async function(event) {
   const body = JSON.parse(event.body);
-  const { meal } = body;
+  const { message } = body;
 
   const openaiResponse = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
@@ -19,7 +19,7 @@ exports.handler = async function(event) {
         },
         {
           role: "user",
-          content: `Give me a nutrition breakdown (calories, macros, vitamins) for this meal: ${meal}. Format it visually in green and orange as HTML.`
+          content: `Give me a nutrition breakdown (calories, macros, vitamins) for this meal: ${message}. Format it visually in green and orange as HTML.`
         }
       ],
       temperature: 0.7,

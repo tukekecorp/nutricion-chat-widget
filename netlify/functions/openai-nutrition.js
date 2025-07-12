@@ -5,13 +5,13 @@ exports.handler = async function (event) {
     const body = JSON.parse(event.body);
     const { message } = body;
 
-    // Log the input message
-    console.log("Received message:", message);
+    // ✅ Debug: Log the incoming message
+    console.log("📥 Received meal message:", message);
 
-    const apiKey = process.env.Open_AI_API_KEY; // ✅ Case-sensitive
+    const apiKey = process.env.Open_AI_API_KEY; // ✅ MUST match the Netlify casing
 
     if (!apiKey) {
-      throw new Error("Open_AI_API_KEY is not defined");
+      throw new Error("❌ Open_AI_API_KEY is not defined in the environment.");
     }
 
     const openaiResponse = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -33,16 +33,17 @@ exports.handler = async function (event) {
           },
         ],
         temperature: 0.7,
+        max_tokens: 500,
       }),
     });
 
     const data = await openaiResponse.json();
 
-    // Log full response to debug
-    console.log("OpenAI Response:", JSON.stringify(data, null, 2));
+    // ✅ Debug: Log full OpenAI response
+    console.log("🧠 OpenAI Response:", JSON.stringify(data, null, 2));
 
     if (!data.choices || !data.choices[0]?.message?.content) {
-      throw new Error("Unexpected OpenAI response format.");
+      throw new Error("❌ OpenAI did not return a valid message.");
     }
 
     return {
@@ -52,7 +53,7 @@ exports.handler = async function (event) {
       }),
     };
   } catch (err) {
-    console.error("Error in openai-nutrition:", err.message);
+    console.error("❌ Backend error:", err.message);
     return {
       statusCode: 500,
       body: JSON.stringify({
@@ -62,5 +63,3 @@ exports.handler = async function (event) {
     };
   }
 };
-
-

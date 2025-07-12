@@ -7,7 +7,7 @@ async function handleMealInput() {
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify({ meal }),
+    body: JSON.stringify({ message: meal }),
   });
 
   const data = await response.json();

@@ -1,39 +1,55 @@
 const fetch = require("node-fetch");
 
 exports.handler = async function(event) {
-  const body = JSON.parse(event.body);
-  const { message } = body;
+  try {
+    const body = JSON.parse(event.body);
+    const { message } = body;
 
-  const openaiResponse = await fetch("https://api.openai.com/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Authorization": `Bearer ${process.env.OPEN_AI_API_KEY}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      model: "gpt-4",
-      messages: [
-        {
-          role: "system",
-          content: "You are a nutritionist that gives infographic-style nutrition breakdowns using green and orange tones."
-        },
-        {
-          role: "user",
-          content: `Give me a nutrition breakdown (calories, macros, vitamins) for this meal: ${message}. Format it visually in green and orange as HTML.`
-        }
-      ],
-      temperature: 0.7,
-    })
-  });
+    const openaiResponse = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${process.env.Open_AI_API_KEY}`, // 💡 double-check the casing
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "gpt-4",
+        messages: [
+          {
+            role: "system",
+            content: "You are a nutritionist that gives infographic-style nutrition breakdowns using green and orange tones."
+          },
+          {
+            role: "user",
+            content: `Give me a nutrition breakdown (calories, macros, vitamins) for this meal: ${message}. Format it visually in green and orange as HTML.`
+          }
+        ],
+        temperature: 0.7,
+      })
+    });
 
-  const data = await openaiResponse.json();
-  console.log("OpenAI response data:", JSON.stringify(data, null, 2));
+    const data = await openaiResponse.json();
+    console.log("OpenAI response:", JSON.stringify(data, null, 2));
 
+    if (!data.choices || !data.choices[0]) {
+      throw new Error("OpenAI response did not include choices");
+    }
 
-  return {
-    statusCode: 200,
-    body: JSON.stringify({
-      result: data.choices[0].message.content
-    })
-  };
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        result: data.choices[0].message.content
+      })
+    };
+
+  } catch (err) {
+    console.error("Function error:", err);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: "Internal server error",
+        details: err.message
+      })
+    };
+  }
 };
+

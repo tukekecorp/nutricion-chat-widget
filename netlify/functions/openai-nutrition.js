@@ -7,7 +7,7 @@ exports.handler = async function(event) {
   const openaiResponse = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
     headers: {
-      "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
+      "Authorization": `Bearer ${process.env.OPEN_AI_API_KEY}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
@@ -27,6 +27,8 @@ exports.handler = async function(event) {
   });
 
   const data = await openaiResponse.json();
+  console.log("OpenAI response data:", JSON.stringify(data, null, 2));
+
 
   return {
     statusCode: 200,
